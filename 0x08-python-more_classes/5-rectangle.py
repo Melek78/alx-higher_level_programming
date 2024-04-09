@@ -8,6 +8,8 @@ Module containing class Rectangle
 class Rectangle:
     """
     A rectangle that has a width and height. Both are 0 by default.
+    has a setter and a getter for the height and width value
+    
     """
 
     def __init__(self, width=0, height=0):
