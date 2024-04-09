@@ -1,62 +1,70 @@
-#!/usr/bin/python3
-"""
-The code is importing the `argv`
-variable from the `sys` module,
-which allows the script to access
-command-line arguments.
-"""
-from sys import argv
+import sys
 
+def is_safe(board, row, col, n):
+    # Check the left side of the row
+    for i in range(col):
+        if board[row][i] == 1:
+            return False
+    
+    # Check upper diagonal on left side
+    for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
+        if board[i][j] == 1:
+            return False
+    
+    # Check lower diagonal on left side
+    for i, j in zip(range(row, n), range(col, -1, -1)):
+        if board[i][j] == 1:
+            return False
+    
+    return True
 
-col = set()
-neg = set()
-pos = set()
-possible_solution = []
+def solve_n_queens_util(board, col, n, solutions):
+    if col >= n:
+        solution = []
+        for i in range(n):
+            row = ''
+            for j in range(n):
+                if board[i][j] == 1:
+                    row += 'Q'
+                else:
+                    row += '.'
+            solution.append(row)
+        solutions.append(solution)
+        return True
+    
+    res = False
+    for i in range(n):
+        if is_safe(board, i, col, n):
+            board[i][col] = 1
+            res = solve_n_queens_util(board, col + 1, n, solutions) or res
+            board[i][col] = 0
+    
+    return res
 
-
-def backtrack_solution(r, n):
-    """
-    The function `backtrack_solution` uses backtracking
-    to find all possible solutions to the N-Queens
-    problem.
-    """
-
-    if r == n:
-        return
-    for c in range(n):
-        if c in col or (r - c) in neg or (r + c) in pos:
-            continue
-        possible_solution.append([])
-        col.add(c)
-        neg.add(r - c)
-        pos.add(r + c)
-        possible_solution[-1].append(r)
-        possible_solution[-1].append(c)
-        if len(possible_solution) == n:
-            print(possible_solution)
-        backtrack_solution(r + 1, n)
-        col.remove(c)
-        neg.remove(r - c)
-        pos.remove(r + c)
-        possible_solution.pop(-1)
-
-
-"""
-The `if __name__ == '__main__':` block is used to ensure
-that the code inside it is only executedwhen the script
-is run directly, and not when it is imported as a module.
-"""
-
-
-if __name__ == '__main__':
-    if len(argv) != 2:
-        print("Usage: nqueens N")
-        exit(1)
-    n = int(argv[1])
-    if type(n) is not int:
+def solve_n_queens(n):
+    if not isinstance(n, int):
         print("N must be a number")
-        exit(1)
+        sys.exit(1)
     if n < 4:
         print("N must be at least 4")
-        exit(1)
-    backtrack_solution(0, n)
+        sys.exit(1)
+    
+    board = [[0] * n for _ in range(n)]
+    solutions = []
+    solve_n_queens_util(board, 0, n, solutions)
+    
+    for solution in solutions:
+        for row in solution:
+            print(row)
+        print()
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: nqueens N")
+        sys.exit(1)
+    try:
+        N = int(sys.argv[1])
+        solve_n_queens(N)
+    except ValueError:
+        print("N must be a number")
+        sys.exit(1)
