@@ -60,7 +60,7 @@ class Rectangle:
         The height function returns the width of an object.
         :return: The width of the object.
         """
-        return self.__width
+        return self.__height
 
     @height.setter
     def height(self, value):
