@@ -1,6 +1,9 @@
 import sys
 
 def is_safe(board, row, col, n):
+    """
+    Check if it's safe to place a queen at position (row, col) on the board.
+    """
     # Check the left side of the row
     for i in range(col):
         if board[row][i] == 1:
@@ -19,16 +22,13 @@ def is_safe(board, row, col, n):
     return True
 
 def solve_n_queens_util(board, col, n, solutions):
+    """
+    Recursively solve the N queens problem.
+    """
     if col >= n:
         solution = []
         for i in range(n):
-            row = ''
-            for j in range(n):
-                if board[i][j] == 1:
-                    row += 'Q'
-                else:
-                    row += '.'
-            solution.append(row)
+            solution.append([i, board[i].index(1)])
         solutions.append(solution)
         return True
     
@@ -42,6 +42,9 @@ def solve_n_queens_util(board, col, n, solutions):
     return res
 
 def solve_n_queens(n):
+    """
+    Solve the N queens problem and print all solutions.
+    """
     if not isinstance(n, int):
         print("N must be a number")
         sys.exit(1)
@@ -54,9 +57,8 @@ def solve_n_queens(n):
     solve_n_queens_util(board, 0, n, solutions)
     
     for solution in solutions:
-        for row in solution:
-            print(row)
-        print()
+        print(solution)
+    print()
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
